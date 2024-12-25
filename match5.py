@@ -28,6 +28,20 @@ class MatchFiveGame:
         self.center_window()
         self.canvas.bind("<Button-1>", self.on_click)
 
+        # Add a toggle button
+        self.toggle_button = tk.Button(
+            root, text="Player vs Computer", command=self.toggle_mode
+        )
+        self.toggle_button.pack(side=tk.BOTTOM)
+
+    def toggle_mode(self):
+        if self.toggle_button["text"] == "Player vs Computer":
+            self.toggle_button.config(text="Player vs Player")
+            self.current_player = 1  # Reset to player 1 for new game
+        else:
+            self.toggle_button.config(text="Player vs Computer")
+            self.current_player = 1  # Switch to player 2 for new game
+
     def center_window(self):
         self.root.update_idletasks()
         window_width = self.root.winfo_width()
@@ -37,7 +51,7 @@ class MatchFiveGame:
 
         x = (screen_width // 2) - (window_width // 2)
         y = (screen_height // 2) - (window_height // 2)
-        self.root.geometry(f"{self.size * box_size}x{self.size * box_size}+{x}+{y}")
+        self.root.geometry(f"{self.size * box_size}x{self.size * box_size+30}+{x}+{y}")
 
     def draw_board(self):
         for i in range(1, self.size):
@@ -49,7 +63,9 @@ class MatchFiveGame:
             )
 
     def on_click(self, event):
-        if self.current_player == 1:  # Human player's turn
+        if self.current_player == 1 or (
+            self.toggle_button["text"] == "Player vs Player"
+        ):  # Human player's turn
             row = event.y // box_size
             col = event.x // box_size
 
@@ -58,8 +74,11 @@ class MatchFiveGame:
                 if self.check_winner():
                     self.show_winner()
                 else:
-                    self.switch_player()
-                    self.root.after(100, self.ai_move)
+                    if self.toggle_button["text"] == "Player vs Computer":
+                        self.switch_player()
+                        self.root.after(100, self.ai_move)
+                    else:
+                        self.switch_player()
 
     def place_marker(self, row, col):
         self.board[row][col] = self.current_player
@@ -119,6 +138,9 @@ class MatchFiveGame:
         self.root.quit()
 
     def ai_move(self):
+        if self.current_player != 2:  # Only AI moves in Player vs Computer mode
+            return
+
         best_move = None
         best_score = -float("inf")
         block_priority = None
