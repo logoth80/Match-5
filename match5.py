@@ -115,8 +115,6 @@ class MatchFiveGame:
                     winning_sequence.append((col, row))
 
                     for dx, dy in directions:
-                        winning_sequence = []
-                        winning_sequence.append((col, row))
                         count = 1
 
                         x, y = row + dx, col + dy
@@ -151,16 +149,7 @@ class MatchFiveGame:
                                 )
 
     def check_possible_winner(self):
-        directions = [
-            (0, 1),
-            (1, 1),
-            (1, 0),
-            (1, -1),
-            (0, -1),
-            (-1, -1),
-            (-1, 0),
-            (-1, 1),
-        ]
+        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
 
         for row in range(self.size):
             for col in range(self.size):
@@ -179,6 +168,17 @@ class MatchFiveGame:
                             count += 1
                             x += dx
                             y += dy
+
+                        # Check backward
+                        x, y = row - dx, col - dy
+                        while (
+                            0 <= x < self.size
+                            and 0 <= y < self.size
+                            and self.board[x][y] == player
+                        ):
+                            count += 1
+                            x -= dx
+                            y -= dy
 
                         if count >= 5:
                             return True
