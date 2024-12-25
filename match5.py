@@ -147,6 +147,7 @@ class MatchFiveGame:
                                     width=box_size // 6,
                                     fill="red",
                                 )
+                            return
 
     def check_possible_winner(self):
         directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
