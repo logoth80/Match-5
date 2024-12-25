@@ -102,6 +102,8 @@ class MatchFiveGame:
             for col in range(self.size):
                 if self.board[row][col] != 0:
                     player = self.board[row][col]
+                    winning_sequence = []
+                    winning_sequence.append((col, row))
 
                     for dx, dy in directions:
                         count = 1
@@ -114,6 +116,7 @@ class MatchFiveGame:
                             and self.board[x][y] == player
                         ):
                             count += 1
+                            winning_sequence.append((y, x))
                             x += dx
                             y += dy
 
@@ -125,10 +128,29 @@ class MatchFiveGame:
                             and self.board[x][y] == player
                         ):
                             count += 1
+                            winning_sequence.append((y, x))
                             x -= dx
                             y -= dy
 
                         if count >= 5:
+                            offsetbox = box_size // 2
+                            for step in range(0, winning_sequence.__len__() - 1):
+                                self.canvas.create_line(
+                                    (
+                                        winning_sequence[step][0] * box_size
+                                        + offsetbox,
+                                        winning_sequence[step][1] * box_size
+                                        + offsetbox,
+                                    ),
+                                    (
+                                        winning_sequence[step + 1][0] * box_size
+                                        + offsetbox,
+                                        winning_sequence[step + 1][1] * box_size
+                                        + offsetbox,
+                                    ),
+                                    width=box_size // 6,
+                                    fill="red",
+                                )
                             return True
 
         return False
@@ -258,8 +280,8 @@ class MatchFiveGame:
                             score += 35
                         elif count == 3:
                             score += 60
-                        elif count == 4:
-                            score += 500
+                        elif count == 4 and open_ends >= 1:
+                            score += 5000
 
                         if count + self.remaining_space(row, col, dx, dy) < 5:
                             score -= 100
