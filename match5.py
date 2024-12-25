@@ -37,10 +37,11 @@ class MatchFiveGame:
     def toggle_mode(self):
         if self.toggle_button["text"] == "Player vs Computer":
             self.toggle_button.config(text="Player vs Player")
-            self.current_player = 1  # Reset to player 1 for new game
+            # self.current_player = 1  # Reset to player 1 for new game
         else:
             self.toggle_button.config(text="Player vs Computer")
-            self.current_player = 1  # Switch to player 2 for new game
+            if self.current_player == 2:  # Switch to player 2 for new game
+                self.ai_move()
 
     def center_window(self):
         self.root.update_idletasks()
