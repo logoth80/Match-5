@@ -3,29 +3,48 @@ from tkinter import messagebox
 
 
 class MatchFiveGame:
+
+    global box_size
+    box_size = 45
+    global grid_xy
+    grid_xy = 25
+
     def __init__(self, root):
         self.root = root
         self.root.title("Match Five Game")
 
-        self.size = 25
+        self.size = grid_xy
         self.board = [[0] * self.size for _ in range(self.size)]
         self.current_player = 1
 
-        self.canvas = tk.Canvas(root, width=self.size * 30, height=self.size * 30)
+        self.canvas = tk.Canvas(
+            root, width=self.size * box_size, height=self.size * box_size
+        )
         self.canvas.pack()
-
         self.draw_board()
+        self.center_window()
         self.canvas.bind("<Button-1>", self.on_click)
+
+    def center_window(self):
+        self.root.update_idletasks()
+        window_width = self.root.winfo_width()
+        window_height = self.root.winfo_height()
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        self.root.geometry(f"{self.size * box_size}x{self.size * box_size}+{x}+{y}")
 
     def draw_board(self):
         for i in range(1, self.size):
-            self.canvas.create_line(i * 30, 0, i * 30, self.size * 30)
-            self.canvas.create_line(0, i * 30, self.size * 30, i * 30)
+            self.canvas.create_line(i * box_size, 0, i * box_size, self.size * box_size)
+            self.canvas.create_line(0, i * box_size, self.size * box_size, i * box_size)
 
     def on_click(self, event):
         if self.current_player == 1:  # Human player's turn
-            row = event.y // 30
-            col = event.x // 30
+            row = event.y // box_size
+            col = event.x // box_size
 
             if self.board[row][col] == 0:
                 self.place_marker(row, col)
@@ -37,8 +56,8 @@ class MatchFiveGame:
 
     def place_marker(self, row, col):
         self.board[row][col] = self.current_player
-        x1, y1 = col * 30 + 5, row * 30 + 5
-        x2, y2 = (col + 1) * 30 - 5, (row + 1) * 30 - 5
+        x1, y1 = col * box_size + 5, row * box_size + 5
+        x2, y2 = (col + 1) * box_size - 5, (row + 1) * box_size - 5
 
         if self.current_player == 1:
             self.canvas.create_oval(x1, y1, x2, y2, outline="red", width="3")
@@ -96,6 +115,20 @@ class MatchFiveGame:
         best_move = None
         best_score = -float("inf")
         block_priority = None
+
+        if not any(2 in row for row in self.board):  # First AI move logic
+            # Prioritize moving closer to the center
+            center = self.size // 2
+            for dx, dy in [(0, 1), (1, 0), (1, 1), (1, -1)]:
+                potential_row, potential_col = center + dx, center + dy
+                if (
+                    0 <= potential_row < self.size
+                    and 0 <= potential_col < self.size
+                    and self.board[potential_row][potential_col] == 0
+                ):
+                    self.place_marker(potential_row, potential_col)
+                    self.switch_player()
+                    return
 
         for row in range(self.size):
             for col in range(self.size):
