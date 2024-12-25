@@ -72,7 +72,7 @@ class MatchFiveGame:
 
             if self.board[row][col] == 0:
                 self.place_marker(row, col)
-                if self.check_winner():
+                if self.check_possible_winner():
                     self.show_winner()
                 else:
                     if self.toggle_button["text"] == "Player vs Computer":
@@ -95,7 +95,60 @@ class MatchFiveGame:
     def switch_player(self):
         self.current_player = 3 - self.current_player
 
-    def check_winner(self):
+    def cross_winner(self):
+        directions = [
+            (0, 1),
+            (1, 1),
+            (1, 0),
+            (1, -1),
+            (0, -1),
+            (-1, -1),
+            (-1, 0),
+            (-1, 1),
+        ]
+
+        for row in range(self.size):
+            for col in range(self.size):
+                if self.board[row][col] != 0:
+                    player = self.board[row][col]
+                    winning_sequence = []
+                    winning_sequence.append((col, row))
+
+                    for dx, dy in directions:
+                        count = 1
+
+                        x, y = row + dx, col + dy
+                        while (
+                            0 <= x < self.size
+                            and 0 <= y < self.size
+                            and self.board[x][y] == player
+                        ):
+                            count += 1
+                            winning_sequence.append((y, x))
+                            x += dx
+                            y += dy
+
+                        if count >= 5:
+                            offsetbox = box_size // 2
+                            for step in range(0, winning_sequence.__len__() - 1):
+                                self.canvas.create_line(
+                                    (
+                                        winning_sequence[step][0] * box_size
+                                        + offsetbox,
+                                        winning_sequence[step][1] * box_size
+                                        + offsetbox,
+                                    ),
+                                    (
+                                        winning_sequence[step + 1][0] * box_size
+                                        + offsetbox,
+                                        winning_sequence[step + 1][1] * box_size
+                                        + offsetbox,
+                                    ),
+                                    width=box_size // 6,
+                                    fill="red",
+                                )
+
+    def check_possible_winner(self):
         directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
 
         for row in range(self.size):
@@ -133,29 +186,11 @@ class MatchFiveGame:
                             y -= dy
 
                         if count >= 5:
-                            # offsetbox = box_size // 2
-                            # for step in range(0, winning_sequence.__len__() - 1):
-                            #     self.canvas.create_line(
-                            #         (
-                            #             winning_sequence[step][0] * box_size
-                            #             + offsetbox,
-                            #             winning_sequence[step][1] * box_size
-                            #             + offsetbox,
-                            #         ),
-                            #         (
-                            #             winning_sequence[step + 1][0] * box_size
-                            #             + offsetbox,
-                            #             winning_sequence[step + 1][1] * box_size
-                            #             + offsetbox,
-                            #         ),
-                            #         width=box_size // 6,
-                            #         fill="red",
-                            #     )
                             return True
-
         return False
 
     def show_winner(self):
+        self.cross_winner()
         winner = "Player 1" if self.current_player == 1 else "Player 2"
         tk.messagebox.showinfo("Game Over", f"{winner} wins!")
         self.root.quit()
@@ -187,7 +222,7 @@ class MatchFiveGame:
                 if self.board[row][col] == 0:
                     # AI checks if it can win
                     self.board[row][col] = 2
-                    if self.check_winner():
+                    if self.check_possible_winner():
                         self.board[row][col] = 0
                         self.place_marker(row, col)
                         self.show_winner()
@@ -196,7 +231,7 @@ class MatchFiveGame:
 
                     # AI checks if it must block Player 1's win
                     self.board[row][col] = 1
-                    if self.check_winner():
+                    if self.check_possible_winner():
                         self.board[row][col] = 0
                         block_priority = (row, col)
                     self.board[row][col] = 0
@@ -220,7 +255,7 @@ class MatchFiveGame:
         if best_move:
             row, col = best_move
             self.place_marker(row, col)
-            if self.check_winner():
+            if self.check_possible_winner():
                 self.show_winner()
             else:
                 self.switch_player()
@@ -282,7 +317,7 @@ class MatchFiveGame:
                             score += 60
                         elif count == 4 and open_ends == 2:
                             score += 5000
-                        elif count == 4:
+                        elif count == 4 and open_ends == 1:
                             score += 1050
 
                         if count + self.remaining_space(row, col, dx, dy) < 5:
