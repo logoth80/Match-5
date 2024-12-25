@@ -314,7 +314,6 @@ class MatchFiveGame:
                             score += 5000
                         elif count == 4 and open_ends == 1:
                             score += 1050
-
                         if count + self.remaining_space(row, col, dx, dy) < 5:
                             score -= 100
 
