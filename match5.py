@@ -155,9 +155,6 @@ class MatchFiveGame:
             for col in range(self.size):
                 if self.board[row][col] != 0:
                     player = self.board[row][col]
-                    winning_sequence = []
-                    winning_sequence.append((col, row))
-
                     for dx, dy in directions:
                         count = 1
 
@@ -169,9 +166,10 @@ class MatchFiveGame:
                             and self.board[x][y] == player
                         ):
                             count += 1
-                            winning_sequence.append((y, x))
                             x += dx
                             y += dy
+
+                        count = 1
 
                         # Check backward
                         x, y = row - dx, col - dy
@@ -181,7 +179,6 @@ class MatchFiveGame:
                             and self.board[x][y] == player
                         ):
                             count += 1
-                            winning_sequence.append((y, x))
                             x -= dx
                             y -= dy
 
