@@ -133,24 +133,24 @@ class MatchFiveGame:
                             y -= dy
 
                         if count >= 5:
-                            offsetbox = box_size // 2
-                            for step in range(0, winning_sequence.__len__() - 1):
-                                self.canvas.create_line(
-                                    (
-                                        winning_sequence[step][0] * box_size
-                                        + offsetbox,
-                                        winning_sequence[step][1] * box_size
-                                        + offsetbox,
-                                    ),
-                                    (
-                                        winning_sequence[step + 1][0] * box_size
-                                        + offsetbox,
-                                        winning_sequence[step + 1][1] * box_size
-                                        + offsetbox,
-                                    ),
-                                    width=box_size // 6,
-                                    fill="red",
-                                )
+                            # offsetbox = box_size // 2
+                            # for step in range(0, winning_sequence.__len__() - 1):
+                            #     self.canvas.create_line(
+                            #         (
+                            #             winning_sequence[step][0] * box_size
+                            #             + offsetbox,
+                            #             winning_sequence[step][1] * box_size
+                            #             + offsetbox,
+                            #         ),
+                            #         (
+                            #             winning_sequence[step + 1][0] * box_size
+                            #             + offsetbox,
+                            #             winning_sequence[step + 1][1] * box_size
+                            #             + offsetbox,
+                            #         ),
+                            #         width=box_size // 6,
+                            #         fill="red",
+                            #     )
                             return True
 
         return False
@@ -280,8 +280,10 @@ class MatchFiveGame:
                             score += 35
                         elif count == 3:
                             score += 60
-                        elif count == 4 and open_ends >= 1:
+                        elif count == 4 and open_ends == 2:
                             score += 5000
+                        elif count == 4:
+                            score += 1050
 
                         if count + self.remaining_space(row, col, dx, dy) < 5:
                             score -= 100
