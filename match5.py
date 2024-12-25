@@ -41,9 +41,10 @@ class MatchFiveGame:
         x2, y2 = (col + 1) * 30 - 5, (row + 1) * 30 - 5
 
         if self.current_player == 1:
-            self.canvas.create_oval(x1, y1, x2, y2, fill="red")
+            self.canvas.create_oval(x1, y1, x2, y2, outline="red", width="3")
         else:
-            self.canvas.create_line(x1, y1, x2, y2, fill="blue", width=5)
+            self.canvas.create_line(x1, y1, x2, y2, fill="blue", width=3)
+            self.canvas.create_line(x1, y2, x2, y1, fill="blue", width=3)
 
     def switch_player(self):
         self.current_player = 3 - self.current_player
@@ -186,7 +187,7 @@ class MatchFiveGame:
 
                         if count == 3 and open_ends == 2:
                             score += 1000  # High priority to block or extend 3 with open ends
-                        elif count == 1 and open_ends == 2:
+                        elif count == 1:
                             score += 20
                         elif count == 2 and open_ends == 2:
                             score += 40
@@ -196,6 +197,9 @@ class MatchFiveGame:
                             score += 60
                         elif count == 4:
                             score += 500
+
+                        if count + self.remaining_space(row, col, dx, dy) < 5:
+                            score -= 100
 
         return score
 
