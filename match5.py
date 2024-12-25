@@ -18,7 +18,10 @@ class MatchFiveGame:
         self.current_player = 1
 
         self.canvas = tk.Canvas(
-            root, width=self.size * box_size, height=self.size * box_size
+            root,
+            width=self.size * box_size,
+            height=self.size * box_size,
+            bg="white",
         )
         self.canvas.pack()
         self.draw_board()
@@ -38,8 +41,12 @@ class MatchFiveGame:
 
     def draw_board(self):
         for i in range(1, self.size):
-            self.canvas.create_line(i * box_size, 0, i * box_size, self.size * box_size)
-            self.canvas.create_line(0, i * box_size, self.size * box_size, i * box_size)
+            self.canvas.create_line(
+                i * box_size, 0, i * box_size, self.size * box_size, fill="powder blue"
+            )
+            self.canvas.create_line(
+                0, i * box_size, self.size * box_size, i * box_size, fill="powder blue"
+            )
 
     def on_click(self, event):
         if self.current_player == 1:  # Human player's turn
@@ -52,7 +59,7 @@ class MatchFiveGame:
                     self.show_winner()
                 else:
                     self.switch_player()
-                    self.ai_move()  # Trigger AI move after Player 1
+                    self.root.after(100, self.ai_move)
 
     def place_marker(self, row, col):
         self.board[row][col] = self.current_player
@@ -60,7 +67,7 @@ class MatchFiveGame:
         x2, y2 = (col + 1) * box_size - 5, (row + 1) * box_size - 5
 
         if self.current_player == 1:
-            self.canvas.create_oval(x1, y1, x2, y2, outline="red", width="3")
+            self.canvas.create_oval(x1, y1, x2, y2, outline="black", width="3")
         else:
             self.canvas.create_line(x1, y1, x2, y2, fill="blue", width=3)
             self.canvas.create_line(x1, y2, x2, y1, fill="blue", width=3)
