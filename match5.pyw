@@ -1,8 +1,15 @@
 import tkinter as tk
 from tkinter import messagebox
+import pygame
+import random
 
 
 class MatchFiveGame:
+    pygame.init()
+    global sounds_o
+    global sounds_x
+    sounds_o = ["marker o1.mp3", "marker o2.mp3"]
+    sounds_x = ["marker x1.mp3", "marker x2.mp3", "marker x3.mp3"]
 
     global box_size
     box_size = 45
@@ -87,10 +94,16 @@ class MatchFiveGame:
         x2, y2 = (col + 1) * box_size - 5, (row + 1) * box_size - 5
 
         if self.current_player == 1:
+            select_sound = random.choice(sounds_o)
             self.canvas.create_oval(x1, y1, x2, y2, outline="black", width="3")
+            pygame.mixer.music.load(select_sound)
+            pygame.mixer.music.play()
         else:
             self.canvas.create_line(x1, y1, x2, y2, fill="blue", width=3)
             self.canvas.create_line(x1, y2, x2, y1, fill="blue", width=3)
+            select_sound = random.choice(sounds_x)
+            pygame.mixer.music.load(select_sound)
+            pygame.mixer.music.play()
 
     def switch_player(self):
         self.current_player = 3 - self.current_player
