@@ -311,7 +311,7 @@ class MatchFiveGame:
                             0 <= x < self.size
                             and 0 <= y < self.size
                             and self.board[x][y] == 0
-                        ):
+                        ):.
                             open_ends += 1
 
                         if count == 3 and open_ends == 2:
@@ -323,7 +323,7 @@ class MatchFiveGame:
                         elif count == 2:
                             score += 35
                         elif count == 3:
-                            score += 60
+                            score += 80
                         elif count == 4 and open_ends == 2:
                             score += 5000
                         elif count == 4 and open_ends == 1:

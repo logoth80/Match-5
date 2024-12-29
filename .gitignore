@@ -1,0 +1,5 @@
+build/
+dist/
+icon.ico.kra
+icon.png.kra
+*.kra
