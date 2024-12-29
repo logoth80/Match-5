@@ -202,7 +202,7 @@ class MatchFiveGame:
         self.cross_winner()
         winner = "Player 1" if self.current_player == 1 else "Player 2"
         tk.messagebox.showinfo("Game Over", f"{winner} wins!")
-        self.root.quit()
+        root.destroy()
 
     def ai_move(self):
         if self.current_player != 2:  # Only AI moves in Player vs Computer mode
@@ -354,6 +354,27 @@ class MatchFiveGame:
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    game = MatchFiveGame(root)
-    root.mainloop()
+
+    def on_closing():
+        global restarting_loop
+        restarting_loop = False
+        root.destroy()
+
+    def key_handler(event):
+        print(str(event.keycode))
+        if event.keycode == 27:
+            global restarting_loop
+            restarting_loop = False
+            root.destroy()
+        if event.keycode == 116:
+            root.destroy()
+        return
+
+    restarting_loop = True
+
+    while restarting_loop:
+        root = tk.Tk()
+        game = MatchFiveGame(root)
+        root.bind("<Key>", key_handler)
+        root.protocol("WM_DELETE_WINDOW", on_closing)
+        root.mainloop()
