@@ -193,9 +193,57 @@ class MatchFiveGame:
                             count += 1
                             x -= dx
                             y -= dy
-
                         if count >= 5:
                             return True
+        return False
+
+    def check_possible_four(self):
+        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
+
+        for row in range(self.size):
+            for col in range(self.size):
+                if self.board[row][col] != 0:
+                    player = self.board[row][col]
+                    for dx, dy in directions:
+                        count = 1
+                        open_ends = 0
+
+                        # Check forward
+                        x, y = row + dx, col + dy
+                        while (
+                            0 <= x < self.size
+                            and 0 <= y < self.size
+                            and self.board[x][y] == player
+                        ):
+                            count += 1
+                            x += dx
+                            y += dy
+                        if (
+                            0 <= x < self.size
+                            and 0 <= y < self.size
+                            and self.board[x][y] == 0
+                        ):
+                            open_ends += 1
+                        # Check backward
+                        x, y = row - dx, col - dy
+                        while (
+                            0 <= x < self.size
+                            and 0 <= y < self.size
+                            and self.board[x][y] == player
+                        ):
+                            count += 1
+                            x -= dx
+                            y -= dy
+                        if (
+                            0 <= x < self.size
+                            and 0 <= y < self.size
+                            and self.board[x][y] == 0
+                        ):
+                            open_ends += 1
+                        if count >= 4 and open_ends > 0:
+                            print(f"possible 4 at {row}, {col}")
+                            # return True
+
         return False
 
     def show_winner(self):
@@ -229,6 +277,7 @@ class MatchFiveGame:
         for row in range(self.size):
             for col in range(self.size):
                 if self.board[row][col] == 0:
+
                     # AI checks if it can win
                     self.board[row][col] = 2
                     if self.check_possible_winner():
@@ -327,7 +376,7 @@ class MatchFiveGame:
                         elif count == 4 and open_ends == 2:
                             score += 5000
                         elif count == 4 and open_ends == 1:
-                            score += 1050
+                            score += 200
                         if count + self.remaining_space(row, col, dx, dy) < 5:
                             score -= 100
         return score
