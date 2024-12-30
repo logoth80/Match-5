@@ -311,7 +311,7 @@ class MatchFiveGame:
                             0 <= x < self.size
                             and 0 <= y < self.size
                             and self.board[x][y] == 0
-                        ):.
+                        ):
                             open_ends += 1
 
                         if count == 3 and open_ends == 2:
@@ -330,7 +330,6 @@ class MatchFiveGame:
                             score += 1050
                         if count + self.remaining_space(row, col, dx, dy) < 5:
                             score -= 100
-
         return score
 
     def remaining_space(self, row, col, dx, dy):
