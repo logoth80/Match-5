@@ -6,3 +6,4 @@ icon.png.kra
 *.kra
 compile.bat
 *.spec
+pyproject.toml

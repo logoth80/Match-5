@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import messagebox
 import pygame
 import random
 
@@ -36,9 +35,7 @@ class MatchFiveGame:
         self.canvas.bind("<Button-1>", self.on_click)
 
         # Add a toggle button
-        self.toggle_button = tk.Button(
-            root, text="Player vs Computer", command=self.toggle_mode
-        )
+        self.toggle_button = tk.Button(root, text="Player vs Computer", command=self.toggle_mode)
         self.toggle_button.pack(side=tk.BOTTOM)
 
     def toggle_mode(self):
@@ -63,17 +60,11 @@ class MatchFiveGame:
 
     def draw_board(self):
         for i in range(1, self.size):
-            self.canvas.create_line(
-                i * box_size, 0, i * box_size, self.size * box_size, fill="powder blue"
-            )
-            self.canvas.create_line(
-                0, i * box_size, self.size * box_size, i * box_size, fill="powder blue"
-            )
+            self.canvas.create_line(i * box_size, 0, i * box_size, self.size * box_size, fill="powder blue")
+            self.canvas.create_line(0, i * box_size, self.size * box_size, i * box_size, fill="powder blue")
 
     def on_click(self, event):
-        if self.current_player == 1 or (
-            self.toggle_button["text"] == "Player vs Player"
-        ):  # Human player's turn
+        if self.current_player == 1 or (self.toggle_button["text"] == "Player vs Player"):  # Human player's turn
             row = event.y // box_size
             col = event.x // box_size
 
@@ -131,11 +122,7 @@ class MatchFiveGame:
                         count = 1
 
                         x, y = row + dx, col + dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             winning_sequence.append((y, x))
                             x += dx
@@ -146,16 +133,12 @@ class MatchFiveGame:
                             for step in range(0, winning_sequence.__len__() - 1):
                                 self.canvas.create_line(
                                     (
-                                        winning_sequence[step][0] * box_size
-                                        + offsetbox,
-                                        winning_sequence[step][1] * box_size
-                                        + offsetbox,
+                                        winning_sequence[step][0] * box_size + offsetbox,
+                                        winning_sequence[step][1] * box_size + offsetbox,
                                     ),
                                     (
-                                        winning_sequence[step + 1][0] * box_size
-                                        + offsetbox,
-                                        winning_sequence[step + 1][1] * box_size
-                                        + offsetbox,
+                                        winning_sequence[step + 1][0] * box_size + offsetbox,
+                                        winning_sequence[step + 1][1] * box_size + offsetbox,
                                     ),
                                     width=box_size // 6,
                                     fill="red",
@@ -174,22 +157,14 @@ class MatchFiveGame:
 
                         # Check forward
                         x, y = row + dx, col + dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             x += dx
                             y += dy
 
                         # Check backward
                         x, y = row - dx, col - dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             x -= dx
                             y -= dy
@@ -210,35 +185,19 @@ class MatchFiveGame:
 
                         # Check forward
                         x, y = row + dx, col + dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             x += dx
                             y += dy
-                        if (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == 0
-                        ):
+                        if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
                             open_ends += 1
                         # Check backward
                         x, y = row - dx, col - dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             x -= dx
                             y -= dy
-                        if (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == 0
-                        ):
+                        if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
                             open_ends += 1
                         if count >= 4 and open_ends > 0:
                             print(f"possible 4 at {row}, {col}")
@@ -265,11 +224,7 @@ class MatchFiveGame:
             center = self.size // 2
             for dx, dy in [(0, 1), (1, 0), (1, 1), (1, -1)]:
                 potential_row, potential_col = center + dx, center + dy
-                if (
-                    0 <= potential_row < self.size
-                    and 0 <= potential_col < self.size
-                    and self.board[potential_row][potential_col] == 0
-                ):
+                if 0 <= potential_row < self.size and 0 <= potential_col < self.size and self.board[potential_row][potential_col] == 0:
                     self.place_marker(potential_row, potential_col)
                     self.switch_player()
                     return
@@ -277,7 +232,6 @@ class MatchFiveGame:
         for row in range(self.size):
             for col in range(self.size):
                 if self.board[row][col] == 0:
-
                     # AI checks if it can win
                     self.board[row][col] = 2
                     if self.check_possible_winner():
@@ -331,36 +285,20 @@ class MatchFiveGame:
 
                         # Check forward
                         x, y = row + dx, col + dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             x += dx
                             y += dy
-                        if (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == 0
-                        ):
+                        if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
                             open_ends += 1
 
                         # Check backward
                         x, y = row - dx, col - dy
-                        while (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == player
-                        ):
+                        while 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == player:
                             count += 1
                             x -= dx
                             y -= dy
-                        if (
-                            0 <= x < self.size
-                            and 0 <= y < self.size
-                            and self.board[x][y] == 0
-                        ):
+                        if 0 <= x < self.size and 0 <= y < self.size and self.board[x][y] == 0:
                             open_ends += 1
 
                         if count == 3 and open_ends == 2:
